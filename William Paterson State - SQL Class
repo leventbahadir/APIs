@@ -1,0 +1,144 @@
+
+
+--1st Question
+with cte as (
+            select avg(Salary) as AverageSalary 
+            from Employees
+            )
+select FirstName,
+       LastName,
+       Salary
+from Employees
+where salary >= (select AverageSalary from cte);
+
+
+
+
+--2nd Question
+SELECT EmployeeID, count(*) AS SalesCount
+FROM Sales
+GROUP BY EmployeeID;
+
+
+
+
+
+--3rd Question
+select *
+from Employees
+where HireDate >= '2020-01-01';
+
+
+
+
+-- 4th Question
+--Select the Department and the minimum salary in each department.
+
+select EmployeeID,
+       FirstName,
+       LastName,
+       Department,
+       Salary,
+       HireDate
+from (
+
+select *,
+       row_number() over(Partition by Department order by Salary asc) as rank
+
+from Employees 
+order by Department
+      )
+where rank = 1;
+
+
+
+
+
+
+--5th Question
+-- Select the EmployeeID and the average sales amount from the Sales table.
+select EmployeeID,
+       avg(Amount) as AvgAmount
+from Sales
+group by EmployeeID;
+
+
+
+
+
+
+-- 6th question
+--Select the FirstName, LastName, and the length of their first name
+
+Select FirstName,
+       LastName,
+       length(FirstName) as FirstNameLength
+from Employees;
+
+
+
+--7th Question
+--Select the Department and the total number of employees in each department.
+
+
+select d.DepartmentName,
+       a.DepCount
+       
+from Departments d
+left join (  
+            select Department, 
+                   Count(EmployeeID) as DepCount
+            from Employees
+            group by Department
+          ) a on a.Department = d.DepartmentName;
+    
+
+--8th Question 
+-- Select the distinct departments from the Employees table, ordered alphabetically
+
+select Distinct Department from Employees
+order by Department asc;
+
+--9th Question
+-- Select the Department and the sum of salaries in each department
+
+select d.DepartmentID,
+       d.DepartmentName,
+       e.SalariesSum
+    
+from Departments d
+left join (
+            select Department,
+                   sum(Salary) as SalariesSum 
+            from Employees
+            group by Department
+          ) e on e.Department = d.DepartmentName;
+
+--10th Question
+--Select the FirstName, LastName, and their salary as a percentage of the total payroll
+                 
+select FirstName,
+       LastName,
+       ((cast(Salary as float) / cast((Select sum(Salary) as TotalPayroll from Employees) as float)) * 100) as PercentageofTotalPayroll
+from Employees
+                      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
