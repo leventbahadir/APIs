@@ -111,3 +111,4 @@ conn.commit()
 
 print("df is ingested into the database table")
 
+
